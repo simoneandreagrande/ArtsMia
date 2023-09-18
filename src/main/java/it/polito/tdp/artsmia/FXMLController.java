@@ -48,11 +48,47 @@ public class FXMLController {
     @FXML
     void doAnalizzaOggetti(ActionEvent event) {
 
+    	txtResult.clear();
+    	this.model.buildGraph();
+    	txtResult.appendText("Il grafo è stato creato correttamente.");
     }
 
     @FXML
     void doCalcolaComponenteConnessa(ActionEvent event) {
 
+    	txtResult.clear();
+    	String input = txtObjectId.getText();
+    	
+    	Integer inputNum = 0;
+    	
+    	// input no stringa vuota
+    	
+    	if (input.trim().isEmpty()) {
+    		txtResult.setText("Inserire Id valido.");
+    		return;
+    	
+    	}
+    	// solo cifre decimali
+    	if (!input.matches("^[0-9]+$")) {
+    	    txtResult.setText("L'Id inserito non è valido. Inserire solo cifre decimali.");
+    	    return;
+    	}
+    	
+    	
+    	// controllo su dati di input, affinchè sia intero
+    	try {
+    		 inputNum = Integer.parseInt(input);
+    	} catch (NumberFormatException e) {
+    		e.printStackTrace();
+    	}
+    	
+    	if (this.model.isIdinGraph(inputNum)) {
+    			Integer sizeConnessa = this.model.calcolaConnessa(inputNum);
+    			txtResult.appendText("Il nodo " + input + " fa parte di una componente"
+	    		+ "connessa di dimensione " + sizeConnessa + " .");
+    	} else {
+    		txtResult.setText("Id inserito non valido.");
+    	}
     }
 
     @FXML
